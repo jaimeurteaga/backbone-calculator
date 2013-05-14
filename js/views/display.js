@@ -10,12 +10,10 @@ app.DisplayView = Backbone.View.extend({
     },
 
     bindEvents: function () {
-        this.listenTo(this.model, 'change', this.updateDisplayValue, this);
-        this.listenTo(this.model, 'change:displayValue', this.render, this);
+        this.listenTo(this.model, 'change', this.render, this);
     },
 
     render: function () {
-        console.log('render');
         this.$el.html(this.template(this.model.toJSON()));
         return this;
     },
@@ -29,8 +27,10 @@ app.DisplayView = Backbone.View.extend({
                 case '*':
                 case '-':
                 case '+':
-                case '=':
                     this.operationCommand(character);
+                    break;
+                case '=':
+                    this.calculateCommand();
                     break;
                 case 'C':
                     this.clearCommand(character);
@@ -39,80 +39,68 @@ app.DisplayView = Backbone.View.extend({
         }
     },
 
+    concat: function (operand, digit) {
+        return (operand == 0 ? '' : operand) + '' + digit;
+    },
+
     digitCommand: function (digit) {
         var data = this.model.toJSON();
-        if (data.resetStack) {
-            data.stack = [digit];
+        if (data.reset) {
+            this.model.set({
+                operand1: digit,
+                operand2: data.operand1,
+                reset: false
+            });
         } else {
-            data.stack = _.clone(data.stack.concat([digit]));
+            this.model.set({
+                operand1: this.concat(data.operand1, digit)
+            });
         }
-        this.model.set({
-            stack: data.stack,
-            resetStack: false
-        });
     },
 
     operationCommand: function (operation) {
-        var data = this.model.toJSON(),
-            valueStack = _.clone(data.valueStack.concat([this.getDisplayValue()]));
-        if (operation != '=') {
-            this.model.set({
-                resetStack: true,
-                operation: operation,
-                valueStack: valueStack
-            });
-        } else {
-            this.model.set({
-                resetStack: true,
-                valueStack: valueStack
-            });
-        }
-        this.returnCommand();
+        this.calculateCommand();
+        var data = this.model.toJSON();
+        this.model.set({
+            operation: operation,
+            reset: true
+        });
     },
 
     clearCommand: function () {
-        this.model.set('stack', [0]);
+        this.model.set(this.model.defaults);
     },
 
-    returnCommand: function () {
-        var data = this.model.toJSON();
-        if (data.valueStack.length == 2) {
-            this.calculateOperation();
-        }
-    },
-
-    calculateOperation: function () {
+    calculateCommand: function () {
         var data = this.model.toJSON(),
-            operation = this.model.previous('operation'),
             value;
-        if (operation != '=') {
-            switch (operation) {
+        if (data.operation) {
+            // console.log(replaceOperands);
+            // if (replaceOperands) {
+            //     value = data.operand1;
+            //     data.operand1 = data.operand2;
+            //     data.operand2 = value;
+            // }
+            switch (data.operation) {
                 case '/':
-                    value = data.valueStack[0] / data.valueStack[1];
+                    value = data.operand2 / data.operand1;
                     break;
                 case '*':
-                    value = data.valueStack[0] * data.valueStack[1];
+                    value = data.operand2 * data.operand1;
                     break;
                 case '-':
-                    value = data.valueStack[0] - data.valueStack[1];
+                    value = data.operand2 - data.operand1;
                     break;
                 case '+':
-                    value = data.valueStack[0] + data.valueStack[1];
+                    value = data.operand2 + data.operand1;
                     break;
             }
             this.model.set({
-                stack: [value],
-                valueStack: [value]
+                operand1: value,
+                operand2: data.operand1,
+                reset: true
             });
         }
-    },
-
-    updateDisplayValue: function () {
-        this.model.set('displayValue', this.getDisplayValue());
-    },
-
-    getDisplayValue: function () {
-        return parseFloat(this.model.get('stack').join(''));
     }
 
 });
