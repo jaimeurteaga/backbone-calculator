@@ -12,11 +12,13 @@ app.Display = Backbone.Model.extend({
     appendValue: function (character) {
         var value = this.get('value'),
             memory1 = this.get('memory1'),
-            newValue = (memory1 || '') + '' + character;
+            memory2 = this.get('memory2'),
+            operation = this.get('operation');//,
+            // newValue = (operation ?  (memory1 || '') : '') + '' + character;
         if (/[0-9\.]/.test(character)) {
             this.set({
-                value: newValue,
-                memory1: newValue
+                value: (memory1 || '') + '' + character,
+                memory1: (memory1 || '') + '' + character
             });
         } else {
             switch (character) {
@@ -24,11 +26,16 @@ app.Display = Backbone.Model.extend({
                 case '*':
                 case '-':
                 case '+':
-                    this.set({
-                        operation: character,
-                        memory1: 0,
-                        memory2: memory1
-                    });
+                    if (memory1 && memory2) {
+                        this.calculateValue();
+                        this.appendValue(character)
+                    } else {
+                        this.set({
+                            operation: character,
+                            memory1: 0,
+                            memory2: memory1
+                        });
+                    }
                     break;
                 case '=':
                     this.calculateValue();
