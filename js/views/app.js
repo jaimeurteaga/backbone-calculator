@@ -19,9 +19,7 @@ app.AppView = Backbone.View.extend({
 
     renderDisplay: function () {
         this.displayView = new app.DisplayView({
-            model: new app.Display({
-                value: 0
-            })
+            model: new app.Display()
         });
         this.$('.display').append(this.displayView.el);
     },
