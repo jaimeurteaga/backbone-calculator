@@ -3,22 +3,23 @@ var app = app || {};
 app.Display = Backbone.Model.extend({
 
     defaults: {
-        value: 0,
+        stack: [0],
+        displayValue: 0,
         operation: null,
-        memory1: 0,
-        memory2: 0
+        resetStack: true,
+        valueStack: []
     },
 
-    appendValue: function (character) {
+    command: function (character) {
         var value = this.get('value'),
             memory1 = this.get('memory1'),
             memory2 = this.get('memory2'),
-            operation = this.get('operation');//,
-            // newValue = (operation ?  (memory1 || '') : '') + '' + character;
+            operation = this.get('operation'),
+            newValue = (memory1 || '') + '' + character;
         if (/[0-9\.]/.test(character)) {
             this.set({
-                value: (memory1 || '') + '' + character,
-                memory1: (memory1 || '') + '' + character
+                value: newValue,
+                memory1: newValue
             });
         } else {
             switch (character) {

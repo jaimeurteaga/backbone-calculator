@@ -38,7 +38,7 @@ app.AppView = Backbone.View.extend({
         this.renderButton('.', 'Dot');
         this.renderButton('*', 'Multiply');
         this.renderButton('=', 'Return');
-        this.renderButton('C', 'Cancel');
+        this.renderButton('C', 'Clear');
     },
 
     renderButton: function (value, className) {
@@ -57,7 +57,7 @@ app.AppView = Backbone.View.extend({
 
     onButtonClick: function (e) {
         var value = $(e.currentTarget).data('value');
-        this.displayView.model.appendValue(value);
+        this.displayView.command(value);
     }
 
 });
