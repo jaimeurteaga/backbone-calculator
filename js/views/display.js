@@ -27,10 +27,11 @@ app.DisplayView = Backbone.View.extend({
                 case '*':
                 case '-':
                 case '+':
+                    this.calculateCommand();
                     this.operationCommand(character);
                     break;
                 case '=':
-                    this.calculateCommand();
+                    this.calculateCommand(true);
                     break;
                 case 'C':
                     this.clearCommand(character);
@@ -44,26 +45,45 @@ app.DisplayView = Backbone.View.extend({
     },
 
     digitCommand: function (digit) {
-        var data = this.model.toJSON();
+        var data = this.model.toJSON(),
+            value;
         if (data.reset) {
-            this.model.set({
-                operand1: digit,
-                operand2: data.operand1,
-                reset: false
-            });
+            if (data.operationFlag) {
+                this.model.set({
+                    result: digit,
+                    operand2: digit,
+                    reset: false
+                });
+            } else {
+                this.model.set({
+                    result: digit,
+                    operand1: digit,
+                    reset: false
+                });
+            }
         } else {
-            this.model.set({
-                operand1: this.concat(data.operand1, digit)
-            });
+            if (data.operationFlag) {
+                value = this.concat(data.operand2, digit);
+                this.model.set({
+                    result: value,
+                    operand2: value
+                });
+            } else {
+                value = this.concat(data.operand1, digit);
+                this.model.set({
+                    result: value,
+                    operand1: value
+                });                
+            }
         }
     },
 
     operationCommand: function (operation) {
-        this.calculateCommand();
         var data = this.model.toJSON();
         this.model.set({
             operation: operation,
-            reset: true
+            reset: true,
+            operationFlag: !data.operationFlag
         });
     },
 
@@ -75,30 +95,29 @@ app.DisplayView = Backbone.View.extend({
         var data = this.model.toJSON(),
             value;
         if (data.operation) {
-            // console.log(replaceOperands);
-            // if (replaceOperands) {
-            //     value = data.operand1;
-            //     data.operand1 = data.operand2;
-            //     data.operand2 = value;
-            // }
+            data.operand2 = data.operand2 == null ? data.operand1 : data.operand2;
+            data.operand1 = parseFloat(data.operand1);
+            data.operand2 = parseFloat(data.operand2);
             switch (data.operation) {
                 case '/':
-                    value = data.operand2 / data.operand1;
+                    value = data.operand1 / data.operand2;
                     break;
                 case '*':
-                    value = data.operand2 * data.operand1;
+                    value = data.operand1 * data.operand2;
                     break;
                 case '-':
-                    value = data.operand2 - data.operand1;
+                    value = data.operand1 - data.operand2;
                     break;
                 case '+':
-                    value = data.operand2 + data.operand1;
+                    value = data.operand1 + data.operand2;
                     break;
             }
             this.model.set({
+                result: value,
                 operand1: value,
-                operand2: data.operand1,
-                reset: true
+                operand2: data.operand2,
+                reset: true,
+                operationFlag: !data.operationFlag
             });
         }
     }
