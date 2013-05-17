@@ -9,7 +9,7 @@ app.Calculator = Backbone.Model.extend({
         // operand1 stores operand 1
         operand1: '0',
         // operand1 stores operand 2
-        operand2: '',
+        operand2: '0',
         // operand1 stores operation
         operation: '',
         // reset flag to switch between operations
@@ -52,7 +52,7 @@ app.Calculator = Backbone.Model.extend({
         } else if (operand === '0' && digit !== '0' && digit !== '.') {
             return digit;
         } else if (operand && operand.indexOf('.') != -1 && digit === '.') {
-            return operand + '';
+            return operand;
         } else {
             return operand + '' + digit;
         }
@@ -63,14 +63,14 @@ app.Calculator = Backbone.Model.extend({
         var value;
         if (this.attributes.reset) {
             if (this.attributes.operationFlag) {
-                value = this.concat(this.attributes.operand1, digit);
+                value = this.concat('0', digit);
                 this.set({
                     result: value,
                     operand2: value,
                     reset: false
                 });
             } else {
-                value = this.concat(this.attributes.operand2, digit);
+                value = this.concat('0', digit);
                 this.set({
                     result: value,
                     operand1: value,
@@ -96,7 +96,7 @@ app.Calculator = Backbone.Model.extend({
 
     // receives operation value from button
     operationCommand: function (operation) {
-        if (this.attributes.operationFlag && this.attributes.operand2) {
+        if (this.attributes.operationFlag && this.attributes.operand2 != 0) {
             this.calculateCommand();
         }
         this.set({
@@ -112,10 +112,12 @@ app.Calculator = Backbone.Model.extend({
     },
 
     // main calculator logic
+    // isResultButton indicate that "=" button pressed
     calculateCommand: function (isResultButton) {
         var value;
         if (this.attributes.operation) {
-            this.attributes.operand2 = this.attributes.operand2 == null ? this.attributes.operand1 : this.attributes.operand2;
+            this.attributes.operand2 = this.attributes.operand2 == 0 ? this.attributes.operand1 : this.attributes.operand2;
+            // convert operands to float
             this.attributes.operand1 = parseFloat(this.attributes.operand1);
             this.attributes.operand2 = parseFloat(this.attributes.operand2);
             switch (this.attributes.operation) {
@@ -132,6 +134,11 @@ app.Calculator = Backbone.Model.extend({
                     value = this.attributes.operand1 + this.attributes.operand2;
                     break;
             }
+            // fix for .33 - .03 = 0.30000000000000004
+            value = (Math.round(value * 100000000000000) / 100000000000000) + '';
+            // convert float values to string
+            this.attributes.operand1 = this.attributes.operand1 + '';
+            this.attributes.operand2 = this.attributes.operand2 + '';
             if (isResultButton) {
                 this.set({
                     result: value,
@@ -144,7 +151,7 @@ app.Calculator = Backbone.Model.extend({
                 this.set({
                     result: value,
                     operand1: value,
-                    operand2: null,
+                    operand2: '0',
                     reset: true,
                     operationFlag: true
                 });
