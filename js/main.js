@@ -1,3 +1,6 @@
 var app = app || {};
 
-app.appView = new app.AppView();
+// Main application starts here
+app.appView = new app.AppView({
+    model: new app.Calculator
+});

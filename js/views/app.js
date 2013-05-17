@@ -1,5 +1,6 @@
 var app = app || {};
 
+// App view responsible for rendering app
 app.AppView = Backbone.View.extend({
 
     el: $('#calculator'),
@@ -12,14 +13,23 @@ app.AppView = Backbone.View.extend({
 
     render: function () {
         this.$el.html(this.template());
+        this.bindEvents();
         this.renderDisplay();
         this.renderButtons();
         return this;
     },
 
+    bindEvents: function () {
+        this.listenTo(this.model, 'change', this.onCalculatorChange, this);
+    },
+
+    onCalculatorChange: function () {
+        this.displayView.setValue(this.model.get('result'));
+    },
+
     renderDisplay: function () {
         this.displayView = new app.DisplayView({
-            model: new app.Display()
+            model: this.model
         });
         this.$('.display').append(this.displayView.el);
     },
@@ -55,7 +65,7 @@ app.AppView = Backbone.View.extend({
 
     onButtonClick: function (e) {
         var value = $(e.currentTarget).data('value');
-        this.displayView.command(value);
+        this.model.command(value);
     }
 
 });

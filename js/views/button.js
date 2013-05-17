@@ -1,5 +1,6 @@
 var app = app || {};
 
+// Button view responsible for rendering of buttons
 app.ButtonView = Backbone.View.extend({
 
     template: _.template($('#button-template').html()),

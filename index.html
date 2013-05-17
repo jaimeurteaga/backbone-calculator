@@ -16,6 +16,7 @@
     <main id="calculator"></main>
 
     <!-- Application templates. -->
+    <!-- Calculator Display template. -->
     <script type="text/template" id="display-template">
         <div class="row">
             <div class="span4">
@@ -24,10 +25,11 @@
         </div>
     </script>
 
+    <!-- Calculator template. -->
     <script type="text/template" id="app-template">
         <div class="container">
             <div class="row">
-                <div class="span4 display"></div>
+                <div class="span4 display"><!-- Calculator Display placeholder. --></div>
             </div>
             <div class="row">
                 <div class="span1 offset2 buttonClear"></div>
@@ -59,6 +61,7 @@
         </div>
     </script>
 
+    <!-- Calculator Button template. -->
     <script type="text/template" id="button-template">
         <div class="row">
             <button class="btn span1" data-value="<%= value %>">
@@ -67,17 +70,21 @@
         </div>
     </script>
 
-  <!-- Application source. -->
-  <script src="js/libs/jquery-1.9.1.min.js"></script>
-  <script src="styles/bootstrap/js/bootstrap.min.js"></script>
-  <script src="js/libs/underscore-min.js"></script>
-  <script src="js/libs/backbone-min.js"></script>
-  <script src="js/models/display.js"></script>
-  <script src="js/models/button.js"></script>
-  <script src="js/views/display.js"></script>
-  <script src="js/views/button.js"></script>
-  <script src="js/views/app.js"></script>
-  <script src="js/main.js"></script>
+    <!-- Application source. -->
+    <!-- Application libs. -->
+    <script src="js/libs/jquery-1.9.1.min.js"></script>
+    <script src="styles/bootstrap/js/bootstrap.min.js"></script>
+    <script src="js/libs/underscore-min.js"></script>
+    <script src="js/libs/backbone-min.js"></script>
+    <!-- Application models. -->
+    <script src="js/models/display.js"></script>
+    <script src="js/models/button.js"></script>
+    <script src="js/models/calculator.js"></script>
+    <!-- Application views. -->
+    <script src="js/views/display.js"></script>
+    <script src="js/views/button.js"></script>
+    <script src="js/views/app.js"></script>
+    <script src="js/main.js"></script>
 
 </body>
 </html>
