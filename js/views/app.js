@@ -40,23 +40,35 @@ app.AppView = Backbone.View.extend({
         while (i--) {
             this.renderButton(i);
         }
-        this.renderButton('/', 'Divide');
-        this.renderButton('+', 'Plus');
-        this.renderButton('-', 'Minus');
-        this.renderButton('.', 'Dot');
-        this.renderButton('*', 'Multiply');
-        this.renderButton('=', 'Return');
-        this.renderButton('C', 'Clear');
+        this.renderButton('/', 'Divide',   'ctrl');
+        this.renderButton('+', 'Plus',     'ctrl');
+        this.renderButton('-', 'Minus',    'ctrl');
+        this.renderButton('.', 'Dot'     );
+        this.renderButton('*', 'Multiply', 'ctrl');
+        this.renderButton('=', 'Return',   'ctrl');
+        this.renderButton('C', 'Clear',    'reset');
     },
 
-    renderButton: function (value, className) {
+    renderButton: function (value, className, type) {
         var className = className || value;
         this.buttons[value] = new app.ButtonView({
             model: new app.Button({
                 value: value
             })
         });
+
         this.$('.button' + className).append(this.buttons[value].el);
+
+        switch (type) {
+            case  'ctrl':
+                this.buttons[value].$el.find('button').addClass('btn-info');
+            break;
+            case  'reset':
+                this.buttons[value].$el.find('button').addClass('btn-danger');
+            break;
+            default:
+            break;
+        }
     },
 
     events: {
