@@ -38,37 +38,58 @@ app.AppView = Backbone.View.extend({
         var i = 10;
         this.buttons = {};
         while (i--) {
-            this.renderButton(i);
+            this.renderButton({
+                value: i,
+                viewClass: 'btn-' + i,
+                buttonClass: ''
+            });
         }
-        this.renderButton('/', 'Divide',   'ctrl');
-        this.renderButton('+', 'Plus',     'ctrl');
-        this.renderButton('-', 'Minus',    'ctrl');
-        this.renderButton('.', 'Dot'     );
-        this.renderButton('*', 'Multiply', 'ctrl');
-        this.renderButton('=', 'Return',   'ctrl');
-        this.renderButton('C', 'Clear',    'reset');
+        this.renderButton({
+            value: '/',
+            viewClass: 'btn-divide',
+            buttonClass: 'btn-info'
+        });
+        this.renderButton({
+            value: '+',
+            viewClass: 'btn-plus',
+            buttonClass: 'btn-info'
+        });
+        this.renderButton({
+            value: '-',
+            viewClass: 'btn-minus',
+            buttonClass: 'btn-info'
+        });
+        this.renderButton({
+            value: '.',
+            viewClass: 'btn-dot',
+            buttonClass: ''
+        });
+        this.renderButton({
+            value: '*',
+            viewClass: 'btn-multiply',
+            buttonClass: 'btn-info'
+        });
+        this.renderButton({
+            value: '=',
+            viewClass: 'btn-return',
+            buttonClass: 'btn-info'
+        });
+        this.renderButton({
+            value: 'C',
+            viewClass: 'btn-clear',
+            buttonClass: 'btn-danger'
+        });
     },
 
-    renderButton: function (value, className, type) {
-        var className = className || value;
-        this.buttons[value] = new app.ButtonView({
+    renderButton: function (options) {
+        options.viewClass = options.viewClass || options.value;
+        this.buttons[options.value] = new app.ButtonView({
             model: new app.Button({
-                value: value
+                value: options.value,
+                className: options.buttonClass
             })
         });
-
-        this.$('.button' + className).append(this.buttons[value].el);
-
-        switch (type) {
-            case  'ctrl':
-                this.buttons[value].$el.find('button').addClass('btn-info');
-            break;
-            case  'reset':
-                this.buttons[value].$el.find('button').addClass('btn-danger');
-            break;
-            default:
-            break;
-        }
+        this.$('.' + options.viewClass).append(this.buttons[options.value].el);
     },
 
     events: {
