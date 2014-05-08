@@ -1,0 +1,5 @@
+# Ignore PHPStorm folder
+.idea/
+
+# Ignore mac files
+.DS_Store
