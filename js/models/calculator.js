@@ -37,7 +37,7 @@ app.Calculator = Backbone.Model.extend({
                     this.calculateCommand(true);
                     break;
                 case 'C':
-                    this.clearCommand(character);
+                    this.clearCommand();
                     break;
             }
         }
