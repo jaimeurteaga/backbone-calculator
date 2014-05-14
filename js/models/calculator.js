@@ -89,7 +89,107 @@ app.Calculator = Backbone.Model.extend({
                 this.set({
                     result: value,
                     operand1: value
-                });                
+                });
+            }
+        }
+    },
+
+    typedCommand: function (key) {
+        // convert type to string
+        var keypress = key + '';
+
+        // Convert keypress char code
+        switch (keypress) {
+            case '48': // Key pressed is 0
+            case '96': // Key is NumPad 0
+                keypress = '0';
+                break;
+            case '49':
+            case '97':
+                keypress = '1';
+                break;
+            case '50':
+            case '98':
+                keypress = '2';
+                break;
+            case '51':
+            case '99':
+                keypress = '3';
+                break;
+            case '52':
+            case '100':
+                keypress = '4';
+                break;
+            case '53':
+            case '101':
+                keypress = '5';
+                break;
+            case '54':
+            case '102':
+                keypress = '6';
+                break;
+            case '55':
+            case '103':
+                keypress = '7';
+                break;
+            case '56':
+            case '104':
+                keypress = '8';
+                break;
+            case '57':
+            case '105':
+                keypress = '9';
+                break;
+
+            case '190': // Key is .
+            case '110': // Key is NumPad .
+                keypress = '.';
+                break;
+
+            case '191':
+                keypress = '/';
+                break;
+            case '107':
+                keypress = '+';
+                break;
+            case '109':
+                keypress = '-';
+                break;
+            case '106':
+                keypress = '*';
+                break;
+
+            case '187': // Key is =
+            case '13': // Key is enter
+                keypress = '=';
+                break;
+            case '67': // Key is c
+            case '46': // Key is delete
+                keypress = 'C';
+                break;
+            default:
+                keypress = '';
+                break;
+        }
+
+
+        // test if it is digits or dot
+        if (/[0-9\.]/.test(keypress)) {
+            this.digitCommand(keypress);
+        } else {
+            switch (keypress) {
+                case '/':
+                case '*':
+                case '-':
+                case '+':
+                    this.operationCommand(keypress);
+                    break;
+                case '=':
+                    this.calculateCommand(true);
+                    break;
+                case 'C':
+                    this.clearCommand();
+                    break;
             }
         }
     },
