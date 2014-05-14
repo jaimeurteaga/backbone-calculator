@@ -101,70 +101,56 @@ app.Calculator = Backbone.Model.extend({
         // Convert keypress char code
         switch (keypress) {
             case '48': // Key pressed is 0
-            case '96': // Key is NumPad 0
                 keypress = '0';
                 break;
             case '49':
-            case '97':
                 keypress = '1';
                 break;
             case '50':
-            case '98':
                 keypress = '2';
                 break;
             case '51':
-            case '99':
                 keypress = '3';
                 break;
             case '52':
-            case '100':
                 keypress = '4';
                 break;
             case '53':
-            case '101':
                 keypress = '5';
                 break;
             case '54':
-            case '102':
                 keypress = '6';
                 break;
             case '55':
-            case '103':
                 keypress = '7';
                 break;
             case '56':
-            case '104':
                 keypress = '8';
                 break;
             case '57':
-            case '105':
                 keypress = '9';
                 break;
-
-            case '190': // Key is .
-            case '110': // Key is NumPad .
+            case '46':
                 keypress = '.';
                 break;
-
-            case '191':
+            case '47':
                 keypress = '/';
                 break;
-            case '107':
+            case '43':
                 keypress = '+';
                 break;
-            case '109':
+            case '45':
                 keypress = '-';
                 break;
-            case '106':
+            case '42':
                 keypress = '*';
                 break;
-
             case '187': // Key is =
             case '13': // Key is enter
                 keypress = '=';
                 break;
-            case '67': // Key is c
-            case '46': // Key is delete
+            case '99': // Key is c
+            case '67': // Key is C
                 keypress = 'C';
                 break;
             default:
@@ -192,6 +178,8 @@ app.Calculator = Backbone.Model.extend({
                     break;
             }
         }
+
+        jQuery('input').focus();
     },
 
     // receives operation value from button
