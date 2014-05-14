@@ -178,7 +178,7 @@ app.Calculator = Backbone.Model.extend({
                     break;
             }
         }
-
+        
         jQuery('input').focus();
     },
 
