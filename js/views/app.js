@@ -16,6 +16,9 @@ app.AppView = Backbone.View.extend({
         this.bindEvents();
         this.renderDisplay();
         this.renderButtons();
+
+        // Set initial focus to calculator for keypress use
+        jQuery('input').focus();
         return this;
     },
 
@@ -93,12 +96,24 @@ app.AppView = Backbone.View.extend({
     },
 
     events: {
-        'click .btn': 'onButtonClick'
+        'click .btn': 'onButtonClick',
+
+        // Add keypress event to input
+        'keypress input': 'onKeyPress'
     },
 
     onButtonClick: function (e) {
         var value = $(e.currentTarget).data('value');
         this.model.command(value);
+    },
+
+    onKeyPress: function (e) {
+//        var key = $(e.keyCode);
+        console.log(e.type, e.keyCode);
+//        this.model.typedCommand(key);
+
+        // Prevents characters from being typed into input
+        e.preventDefault();
     }
 
 });
