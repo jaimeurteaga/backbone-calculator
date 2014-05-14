@@ -108,9 +108,11 @@ app.AppView = Backbone.View.extend({
     },
 
     onKeyPress: function (e) {
-//        var key = $(e.keyCode);
-        console.log(e.type, e.keyCode);
-//        this.model.typedCommand(key);
+        // Sets keycode to var key
+        var keyCode = e.keyCode;
+
+        // Passes keyCode to typedCommand function in model
+        this.model.typedCommand(keyCode);
 
         // Prevents characters from being typed into input
         e.preventDefault();
